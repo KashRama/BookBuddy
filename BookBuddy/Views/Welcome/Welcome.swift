@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  Welcome.swift
 //  BookBuddy
 //
 //  Created by Kashyap Ramachandrula on 4/24/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct Welcome: View {
     @AppStorage("userName") private var userName: String = ""
     @State private var showingNamePrompt = false
     @State private var tempName = ""
@@ -36,7 +36,7 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                NavigationLink(destination: MainView()) {
+                NavigationLink(destination: Main()) {
                     Text("Continue to Book Buddy")
                         .frame(maxWidth: .infinity)
                 }
@@ -60,20 +60,6 @@ struct ContentView: View {
     }
 }
 
-// Your main app view where all functionality will live
-struct MainView: View {
-    var body: some View {
-        VStack {
-            Text("Main Book Buddy View")
-                .font(.largeTitle)
-            
-            // Add your main functionality here
-        }
-        .navigationTitle("Book Buddy")
-        .navigationBarTitleDisplayMode(.large)
-    }
-}
-
 #Preview {
-    ContentView()
+    Welcome()
 }
