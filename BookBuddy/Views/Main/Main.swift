@@ -17,10 +17,14 @@ struct Main: View {
     
     @State private var newDataFlag: Bool = false
     
+    private var isInputValid: Bool {
+        !bookName.isEmpty && !author.isEmpty
+    }
+    
     var body: some View {
         VStack {
             if (bookName.isEmpty && author.isEmpty) {
-                Text("Enter a new book below.")
+                Text("Enter a new book below")
                     .padding(10)
             }
             else {
@@ -35,16 +39,30 @@ struct Main: View {
                     .multilineTextAlignment(.center)
                     .textFieldStyle(.roundedBorder)
             }
+            .padding(10)
             
-            Spacer()
-            
-            CurrentData(pageNumber: "65", summary: "", lastReadDate: "04-24-2026")
-            
-            Spacer()
-            
-            Button("Did you read today? Enter your new info here!") {
-                newDataFlag = true
+            Button("Enter") {
+                pageNumber = "0"
+                summary = "Start reading to get a summary!"
+                lastDateRead = "Today perhaps?"
             }
+            .disabled(!isInputValid)
+            .padding(10)
+            
+            Spacer()
+            
+            if (!pageNumber.isEmpty && !summary.isEmpty && !lastDateRead.isEmpty) {
+                CurrentData(pageNumber: pageNumber, summary: summary, lastReadDate: lastDateRead)
+            }
+            
+            Spacer()
+            
+            if (!pageNumber.isEmpty && !summary.isEmpty && !lastDateRead.isEmpty) {
+                Button("Did you read today? Enter your new info here!") {
+                    newDataFlag = true
+                }
+            }
+            
         }
         .font(.custom("Lexend-Regular", size: 15))
         .sheet(isPresented: $newDataFlag) {

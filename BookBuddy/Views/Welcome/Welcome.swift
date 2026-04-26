@@ -8,31 +8,18 @@
 import SwiftUI
 
 struct Welcome: View {
-    @AppStorage("userName") private var userName: String = ""
-    @State private var showingNamePrompt = false
-    @State private var tempName = ""
-    
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
                 Spacer()
                 
-                Image(systemName: "book.fill")
+                Image(systemName: "book")
                     .imageScale(.large)
                     .foregroundStyle(.tint)
                 
-                if userName.isEmpty {
-                    Text("Hello, Reader!")
-                        .bold()
-                } else {
-                    Text("Hello, \(userName)!")
-                        .font(.custom("Lexend-Regular", size: 25))
-                        .bold()
-                }
-                
-                Button("Set Your Name") {
-                    showingNamePrompt = true
-                }
+                Text("Welcome to Book Buddy!")
+                    .font(.custom("Lexend-Regular", size: 25))
+                    .bold()
                 
                 Spacer()
                 
@@ -47,15 +34,6 @@ struct Welcome: View {
             .font(.custom("Lexend-Regular", size: 17))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(.systemGroupedBackground))
-            .alert("What's your name?", isPresented: $showingNamePrompt) {
-                TextField("Name", text: $tempName)
-                Button("Save") {
-                    userName = tempName
-                }
-                Button("Cancel", role: .cancel) {
-                    tempName = ""
-                }
-            }
         }
     }
 }

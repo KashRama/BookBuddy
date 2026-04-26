@@ -13,13 +13,16 @@ struct NewData: View {
     
     @Environment(\.dismiss) private var dismiss
     
+    private var isFormValid: Bool {
+        !pageNumber.isEmpty && !userSummary.isEmpty
+    }
+    
     var body: some View {
         VStack {
             Text("Enter today's information:")
                 .font(.custom("Lexend-Regular", size: 25))
-            
-            Spacer()
-            
+                .padding(.bottom, 40)
+                        
             Text("What page did you leave off?")
                 .padding(.top, 30)
                 .padding(.bottom, 15)
@@ -66,7 +69,7 @@ struct NewData: View {
                 dismiss()
             }
             .font(.custom("Lexend-Regular", size: 20))
-
+            .disabled(!isFormValid)
             
         }
         .font(.custom("Lexend-Regular", size: 15))
