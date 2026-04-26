@@ -29,27 +29,28 @@ struct CurrentData: View {
             .frame(width: 200, height: 200)
             .overlay(
                 VStack {
-                    Text("\(pageNumber)")
+                    Text(pageNumber)
                         .font(.custom("Lexend-Regular", size: 100))
                 }
             )
             .padding(.bottom, 20)
         
         Text("Summary to where you left off")
-            .padding(.bottom, 10)
             .font(.custom("Lexend-Regular", size: 18))
+            .padding(.bottom, 10)
 
-        Text("\(summary)")
+        Text(LocalizedStringKey(summary))
             .lineSpacing(6)
             .multilineTextAlignment(isSummarySingleLine ? .center : .leading)
             .frame(maxWidth: .infinity, alignment: isSummarySingleLine ? .center : .leading)
+            .padding(.horizontal, 20)
             .padding(.bottom, 20)
         
         Text("Last time you read")
             .padding(.bottom, 10)
             .font(.custom("Lexend-Regular", size: 18))
 
-        Text("\(lastReadDate)")
+        Text(lastReadDate)
             .padding(.bottom, 20)
     }
 }

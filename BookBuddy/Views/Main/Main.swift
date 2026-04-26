@@ -85,10 +85,13 @@ struct Main: View {
             .font(.custom("Lexend-Regular", size: 15))
             .sheet(isPresented: $newDataFlag) {
                 NewData(
+                    bookName: $bookName,
+                    author: $author,
                     pageNumber: $pageNumber,
                     chapter: $chapter,
                     userSummary: $userSummary,
-                    lastDateRead: $lastDateRead
+                    lastDateRead: $lastDateRead,
+                    summary: $summary
                 )
             }
         }
