@@ -10,6 +10,7 @@ struct NewData: View {
     @Binding var pageNumber: String
     @Binding var chapter: String
     @Binding var userSummary: String
+    @Binding var lastDateRead: String
     
     @Environment(\.dismiss) private var dismiss
     
@@ -62,10 +63,14 @@ struct NewData: View {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(lineWidth: 1)
                 )
-            
+
             Spacer()
             
             Button("Submit!") {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "MM-dd-yyyy 'at' hh:mm a"
+                lastDateRead = formatter.string(from: Date.now)  // ← Fixed!
+                
                 dismiss()
             }
             .font(.custom("Lexend-Regular", size: 20))
@@ -81,6 +86,11 @@ struct NewData: View {
 
 #Preview {
     NavigationStack {
-        NewData(pageNumber: .constant("65"), chapter: .constant("5"), userSummary: .constant("Just read 100 pages of the book"))
+        NewData(
+            pageNumber: .constant("65"),
+            chapter: .constant("5"),
+            userSummary: .constant("Just read 100 pages of the book"),
+            lastDateRead: .constant("2021-09-01")
+        )
     }
 }
