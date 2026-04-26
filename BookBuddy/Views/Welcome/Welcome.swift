@@ -44,7 +44,7 @@ struct Welcome: View {
                 .controlSize(.large)
             }
             .padding()
-            .font(.custom("Lexend-Regular", size: 17.0))
+            .font(.custom("Lexend-Regular", size: 17))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(.systemGroupedBackground))
             .alert("What's your name?", isPresented: $showingNamePrompt) {
