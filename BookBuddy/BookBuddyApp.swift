@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct BookBuddyApp: App {
@@ -13,5 +14,6 @@ struct BookBuddyApp: App {
         WindowGroup {
             Welcome()
         }
+        .modelContainer(for: [Book.self, ReadingLog.self])
     }
 }

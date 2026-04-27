@@ -5,17 +5,15 @@
 //  Created by Kashyap Ramachandrula on 4/25/26.
 //
 import SwiftUI
+import SwiftData
 
 struct Main: View {
-    @AppStorage("bookName") private var bookName = ""
-    @AppStorage("author") private var author = ""
-    @AppStorage("pageNumber") private var pageNumber = ""
-    @AppStorage("chapter") private var chapter = ""
-    @AppStorage("summary") private var summary = ""
-    @AppStorage("userSummary") private var userSummary = ""
-    @AppStorage("lastDateRead") private var lastDateRead = ""
+    @Environment(\.modelContext) private var modelContext
+    @Query private var books: [Book]
     
+    @State private var currentBook: Book?
     @State private var newDataFlag: Bool = false
+    @State private var showLogHistory: Bool = false
     @State private var tempBook = ""
     @State private var tempAuthor = ""
     
@@ -24,7 +22,7 @@ struct Main: View {
     }
     
     var body: some View {
-//        Debugging button for dev. Uncomment when storage needs to be reset
+        //        Debugging button for dev. Uncomment when storage needs to be reset
 //        Button("RESET STORAGE") {
 //            UserDefaults.standard.removeObject(forKey: "bookName")
 //            UserDefaults.standard.removeObject(forKey: "author")
@@ -37,15 +35,14 @@ struct Main: View {
 //        .padding(.top, 20)
         ScrollView {
             VStack {
-                if bookName.isEmpty && author.isEmpty {
-                    Text("Enter a new book below")
-                        .padding(10)
-                }
-                else {
-                    Text("Current Book: \(bookName) by \(author)")
+                if let book = currentBook {
+                    Text("Current Book: \(book.title) by \(book.author)")
                         .padding(10)
                     
                     Text("Or, enter a different book you're reading")
+                        .padding(10)
+                } else {
+                    Text("Enter a new book below")
                         .padding(10)
                 }
                 
@@ -60,14 +57,10 @@ struct Main: View {
                 .padding(10)
                 
                 Button("Start Reading!") {
-                    pageNumber = "1"
-                    chapter = "1"
-                    summary = "Start reading to get a summary!"
-                    userSummary = ""
-                    lastDateRead = "Today perhaps?"
-                    bookName = tempBook
+                    let newBook = Book(title: tempBook, author: tempAuthor)
+                    modelContext.insert(newBook)
+                    currentBook = newBook
                     tempBook = ""
-                    author = tempAuthor
                     tempAuthor = ""
                 }
                 .disabled(!isInputValid)
@@ -75,33 +68,55 @@ struct Main: View {
                 
                 Spacer()
                 
-                if !pageNumber.isEmpty && !summary.isEmpty && !lastDateRead.isEmpty {
-                    CurrentData(pageNumber: pageNumber, summary: summary, lastReadDate: lastDateRead)
+                if let book = currentBook {
+                    CurrentData(
+                        pageNumber: String(book.currentPage),
+                        summary: book.lastSummary,
+                        lastReadDate: book.logs.last?.dateRead.formatted(date: .abbreviated, time: .shortened) ?? "Not yet"
+                    )
                 }
                 
                 Spacer()
-                
             }
             .font(.custom("Lexend-Regular", size: 15))
-            .sheet(isPresented: $newDataFlag) {
-                NewData(
-                    bookName: $bookName,
-                    author: $author,
-                    pageNumber: $pageNumber,
-                    chapter: $chapter,
-                    userSummary: $userSummary,
-                    lastDateRead: $lastDateRead,
-                    summary: $summary
-                )
-            }
         }
         .navigationBarHidden(true)
+        .sheet(isPresented: $showLogHistory) {
+            LogListView()
+        }
+        .onAppear {
+            // Set current book to the most recently added one if available
+            if currentBook == nil, let lastBook = books.last {
+                currentBook = lastBook
+            }
+        }
         
-        if !pageNumber.isEmpty && !summary.isEmpty && !lastDateRead.isEmpty {
+        if !books.isEmpty {
+            Button {
+                showLogHistory = true
+            } label: {
+                HStack {
+                    Image(systemName: "book.closed")
+                    Text("View Reading History")
+                }
+                .font(.custom("Lexend-Regular", size: 15))
+                .padding(.vertical, 8)
+                .padding(.horizontal, 16)
+                .background(Color.blue.opacity(0.1))
+                .cornerRadius(8)
+            }
+        }
+        
+        if currentBook != nil {
             Button("Did you read today? Enter your new info here!") {
-                userSummary = ""
                 newDataFlag = true
             }
+            .sheet(isPresented: $newDataFlag) {
+                if let book = currentBook {
+                    NewData(book: book)
+                }
+            }
+            .padding(.bottom, -18)
         }
     }
 }
@@ -110,4 +125,5 @@ struct Main: View {
     NavigationStack {
         Main()
     }
+    .modelContainer(for: [Book.self, ReadingLog.self])
 }
