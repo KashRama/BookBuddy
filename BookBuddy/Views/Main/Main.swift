@@ -35,11 +35,8 @@ struct Main: View {
 //        .padding(.top, 20)
         ScrollView {
             VStack {
-                if let book = currentBook {
-                    Text("Current Book: \(book.title) by \(book.author)")
-                        .padding(10)
-                    
-                    Text("Or, enter a different book you're reading")
+                if currentBook != nil {
+                    Text("Enter a different book you're reading")
                         .padding(10)
                 } else {
                     Text("Enter a new book below")
@@ -70,9 +67,11 @@ struct Main: View {
                 
                 if let book = currentBook {
                     CurrentData(
+                        book: book.title,
+                        author: book.author,
                         pageNumber: String(book.currentPage),
                         summary: book.lastSummary,
-                        lastReadDate: book.logs.last?.dateRead.formatted(date: .abbreviated, time: .shortened) ?? "Not yet"
+                        lastReadDate: book.logs.last?.dateRead.formatted(date: .abbreviated, time: .shortened) ?? "Start Reading!"
                     )
                 }
                 

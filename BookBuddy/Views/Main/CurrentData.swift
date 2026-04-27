@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct CurrentData: View {
+    let book: String
+    let author: String
     let pageNumber: String
     let summary: String
     let lastReadDate: String
@@ -16,11 +18,12 @@ struct CurrentData: View {
     }
  
     var body: some View {
-        Text("Where you left off last")
-            .padding(.bottom, 20)
+        Text(book)
             .font(.custom("Lexend-Regular", size: 25))
-            .underline()
 
+        Text(author)
+            .padding(.bottom, 20)
+        
         Text("Page Number")
             .font(.custom("Lexend-Regular", size: 18))
 
@@ -59,6 +62,8 @@ struct CurrentData: View {
 #Preview {
     NavigationStack {
         CurrentData(
+            book: "When You See Me",
+            author: "Lisa Gardner",
             pageNumber: "65",
             summary: "Start reading to get a summary!",
             lastReadDate: "04-25-2025 at 10:35 PM")
