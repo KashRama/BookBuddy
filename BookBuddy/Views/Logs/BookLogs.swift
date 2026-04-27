@@ -15,8 +15,26 @@ struct BookLogsView: View {
         book.logs.sorted { $0.dateRead > $1.dateRead }
     }
     
+    @Binding var currentBook: Book?
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         List {
+            Section {
+                Button {
+                    currentBook = book
+                    dismiss()
+                } label: {
+                    HStack {
+                        Image(systemName: "book.fill")
+                        Text("Continue Reading This Book")
+                            .font(.custom("Lexend-Regular", size: 16))
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                    }
+                }
+            }
+            
             if sortedLogs.isEmpty {
                 VStack(spacing: 20) {
                     Image(systemName: "doc.text")
@@ -70,19 +88,19 @@ struct BookLogsView: View {
     }
 }
 
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Book.self, ReadingLog.self, configurations: config)
-    
-    let sampleBook = Book(title: "When You See Me", author: "Lisa Gardner")
-    let log1 = ReadingLog(pageNumber: 65, chapter: "5", userNotes: "Flora is investigating a new case", dateRead: Date())
-    let log2 = ReadingLog(pageNumber: 120, chapter: "8", userNotes: "Major plot twist revealed", dateRead: Date().addingTimeInterval(-86400))
-    
-    sampleBook.logs = [log1, log2]
-    container.mainContext.insert(sampleBook)
-    
-    return NavigationStack {
-        BookLogsView(book: sampleBook)
-    }
-    .modelContainer(container)
-}
+//#Preview {
+//    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+//    let container = try! ModelContainer(for: Book.self, ReadingLog.self, configurations: config)
+//    
+//    let sampleBook = Book(title: "When You See Me", author: "Lisa Gardner")
+//    let log1 = ReadingLog(pageNumber: 65, chapter: "5", userNotes: "Flora is investigating a new case", dateRead: Date())
+//    let log2 = ReadingLog(pageNumber: 120, chapter: "8", userNotes: "Major plot twist revealed", dateRead: Date().addingTimeInterval(-86400))
+//    
+//    sampleBook.logs = [log1, log2]
+//    container.mainContext.insert(sampleBook)
+//    
+//    return NavigationStack {
+//        BookLogsView(book: sampleBook)
+//    }
+//    .modelContainer(container)
+//}

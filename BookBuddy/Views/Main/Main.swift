@@ -82,7 +82,7 @@ struct Main: View {
         }
         .navigationBarHidden(true)
         .sheet(isPresented: $showLogHistory) {
-            LogListView()
+            LogListView(currentBook: $currentBook)
         }
         .onAppear {
             // Set current book to the most recently added one if available
@@ -117,6 +117,7 @@ struct Main: View {
                 }
             }
             .padding(.bottom, -18)
+            .font(.custom("Lexend-Regular", size: 15))
         }
     }
 }

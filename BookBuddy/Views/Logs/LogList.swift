@@ -9,8 +9,17 @@ import SwiftUI
 import SwiftData
 
 struct LogListView: View {
-    @Query(sort: \Book.dateAdded, order: .reverse) private var books: [Book]
+    @Query private var allBooks: [Book]
     @Environment(\.dismiss) private var dismiss
+    @Binding var currentBook: Book?
+    
+    var books: [Book] {
+        allBooks.sorted { book1, book2 in
+            let date1 = book1.logs.max(by: { $0.dateRead < $1.dateRead })?.dateRead ?? book1.dateAdded
+            let date2 = book2.logs.max(by: { $0.dateRead < $1.dateRead })?.dateRead ?? book2.dateAdded
+            return date1 > date2
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -31,7 +40,7 @@ struct LogListView: View {
                 .padding()
             } else {
                 List(books) { book in
-                    NavigationLink(destination: BookLogsView(book: book)) {
+                    NavigationLink(destination: BookLogsView(book: book, currentBook: $currentBook)) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(book.title)
                                 .font(.custom("Lexend-Regular", size: 18))
@@ -74,8 +83,10 @@ struct LogListView: View {
 }
 
 #Preview {
+    @Previewable @State var currentBook: Book? = nil
+    
     NavigationStack {
-        LogListView()
+        LogListView(currentBook: $currentBook)
     }
     .modelContainer(for: [Book.self, ReadingLog.self])
 }
