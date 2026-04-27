@@ -51,7 +51,6 @@ struct Main: View {
                         .multilineTextAlignment(.center)
                         .textFieldStyle(.roundedBorder)
                 }
-                .padding(10)
                 
                 Button("Start Reading!") {
                     let newBook = Book(title: tempBook, author: tempAuthor)
@@ -61,7 +60,7 @@ struct Main: View {
                     tempAuthor = ""
                 }
                 .disabled(!isInputValid)
-                .padding(15)
+                .padding(.bottom, 15)
                 
                 Spacer()
                 
